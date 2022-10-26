@@ -9,7 +9,7 @@ import com.felixdeveloperand.dictionary.feature_dictionary.data.local.entity.Wor
 @Dao
 interface WordInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWordInfo(infos: List<WordInfoEntity>)
+    suspend fun insertWordInfos(infos: List<WordInfoEntity>)
 
     @Query("DELETE FROM WordInfoEntity WHERE word IN(:word)")
     suspend fun deleteWordInfos(word:List<String>)

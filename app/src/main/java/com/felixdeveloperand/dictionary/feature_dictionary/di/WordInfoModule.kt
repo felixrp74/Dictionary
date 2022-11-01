@@ -3,6 +3,7 @@ package com.felixdeveloperand.dictionary.feature_dictionary.di
 import android.app.Application
 import androidx.room.Room
 import com.felixdeveloperand.dictionary.DictionaryApp
+import com.felixdeveloperand.dictionary.feature_dictionary.data.local.Converters
 import com.felixdeveloperand.dictionary.feature_dictionary.data.local.WordInfoDao
 import com.felixdeveloperand.dictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.felixdeveloperand.dictionary.feature_dictionary.data.remote.DictionaryApi
@@ -27,37 +28,35 @@ object WordInfoModule {
 
     @Provides
     @Singleton
-    fun provideGetWordInfoUseCase(repository: WordInfoRepository):GetWordInfo{
+    fun provideGetWordInfoUseCase(repository: WordInfoRepository): GetWordInfo {
         return GetWordInfo(repository)
     }
 
     @Provides
     @Singleton
     fun provideWordInfoRepository(
-        db:WordInfoDatabase,
-        api:DictionaryApi
-    ): WordInfoRepository{
-        return WordInfoRepositoryImpl(api,db.dao)
+        db: WordInfoDatabase,
+        api: DictionaryApi
+    ): WordInfoRepository {
+        return WordInfoRepositoryImpl(api, db.dao)
     }
 
     @Provides
     @Singleton
-    fun provideWordInfoDatabase(app:Application):WordInfoDatabase{
+    fun provideWordInfoDatabase(app: Application): WordInfoDatabase {
         return Room.databaseBuilder(
             app, WordInfoDatabase::class.java, "word_db"
-        ).addTypeConverter(GsonParser(Gson()))
+        ).addTypeConverter(Converters(GsonParser(Gson())))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideDictionaryApi():DictionaryApi{
+    fun provideDictionaryApi(): DictionaryApi {
         return Retrofit.Builder()
             .baseUrl(DictionaryApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DictionaryApi::class.java)
     }
-
-
 }

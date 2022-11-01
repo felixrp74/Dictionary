@@ -1,5 +1,6 @@
-package com.felixdeveloperand.dictionary.feature_dictionary.domain.presentation
+package com.felixdeveloperand.dictionary.feature_dictionary.presentation
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class WordInfoViewModel @Inject constructor(
@@ -32,31 +34,35 @@ class WordInfoViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
-    fun onSearchQuery(query:String){
+    fun onSearch(query: String) {
         _searchQuery.value = query
+        searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500L)
             getWordInfo(query)
-                .onEach {
-                    when(it){
-                        is Resource.Success ->{
+                .onEach { result ->
+                    when(result) {
+                        is Resource.Success -> {
+                                Log.d("SUCCESS",query)
                             _state.value = state.value.copy(
-                                wordInfoItems = it.data ?: emptyList(),
+                                wordInfoItems = result.data ?: emptyList(),
                                 isLoading = false
                             )
                         }
-                        is Resource.Error ->{
+                        is Resource.Error -> {
+                            Log.d("ERROR",query)
                             _state.value = state.value.copy(
-                                wordInfoItems = it.data ?: emptyList(),
+                                wordInfoItems = result.data ?: emptyList(),
                                 isLoading = false
                             )
                             _eventFlow.emit(UIEvent.ShowSnackbar(
-                                it.message ?: "Unknown error"
+                                result.message ?: "Unknown error"
                             ))
                         }
-                        is Resource.Loading ->{
+                        is Resource.Loading -> {
+                            Log.d("LOADING",query)
                             _state.value = state.value.copy(
-                                wordInfoItems = it.data ?: emptyList(),
+                                wordInfoItems = result.data ?: emptyList(),
                                 isLoading = true
                             )
                         }
@@ -65,8 +71,7 @@ class WordInfoViewModel @Inject constructor(
         }
     }
 
-    sealed class UIEvent{
-        data class ShowSnackbar(val message:String): UIEvent()
+    sealed class UIEvent {
+        data class ShowSnackbar(val message: String): UIEvent()
     }
-
 }

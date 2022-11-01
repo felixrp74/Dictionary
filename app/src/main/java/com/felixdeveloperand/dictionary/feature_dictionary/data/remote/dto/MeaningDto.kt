@@ -1,4 +1,4 @@
-package com.felixdeveloperand.dictionary.feature_dictionary.domain.model.dto
+package com.felixdeveloperand.dictionary.feature_dictionary.data.remote.dto
 
 import com.felixdeveloperand.dictionary.feature_dictionary.domain.model.Meaning
 

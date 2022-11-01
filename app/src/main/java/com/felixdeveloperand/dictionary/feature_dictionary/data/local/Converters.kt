@@ -1,6 +1,7 @@
 package com.felixdeveloperand.dictionary.feature_dictionary.data.local
 
 import androidx.room.ProvidedTypeConverter
+import androidx.room.TypeConverter
 import com.felixdeveloperand.dictionary.feature_dictionary.data.util.GsonParser
 import com.felixdeveloperand.dictionary.feature_dictionary.domain.model.Meaning
 import com.google.gson.reflect.TypeToken
@@ -9,6 +10,7 @@ import com.google.gson.reflect.TypeToken
 class Converters(
     private val jsonParser: GsonParser
 ) {
+    @TypeConverter
     fun fromMeaningsJson(json:String):List<Meaning>{
         return jsonParser.fromJson<ArrayList<Meaning>>(
             json,
@@ -16,6 +18,7 @@ class Converters(
         ) ?: emptyList()
     }
 
+    @TypeConverter
     fun toMeaningJson(meanings:List<Meaning>):String{
         return jsonParser.toJson(
             meanings,

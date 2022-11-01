@@ -7,11 +7,14 @@ import com.felixdeveloperand.dictionary.feature_dictionary.data.local.entity.Wor
 
 @Database(
     entities = [WordInfoEntity::class],
-    version = 1
+    version = 2
 )
+
 @TypeConverters(Converters::class)
 abstract class WordInfoDatabase:RoomDatabase() {
 
     abstract val dao:WordInfoDao
+
+
 
 }

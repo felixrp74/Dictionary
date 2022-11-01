@@ -1,4 +1,4 @@
-package com.felixdeveloperand.dictionary.feature_dictionary.domain.presentation
+package com.felixdeveloperand.dictionary.feature_dictionary.presentation
 
 import com.felixdeveloperand.dictionary.feature_dictionary.domain.model.WordInfo
 
